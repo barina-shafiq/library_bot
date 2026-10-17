@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Library Book Finder Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success-bg: #ecfdf5;
+            --success-border: #a7f3d0;
+            --success-text: #065f46;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --danger-text: #991b1b;
+            --badge-active-bg: #dbeafe;
+            --badge-active-text: #1e40af;
+            --badge-cancelled-bg: #f1f5f9;
+            --badge-cancelled-text: #64748b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 3rem;
+        }
+
+        /* Top Navigation */
+        .admin-nav {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0.875rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .nav-brand-badge {
+            background-color: #eff6ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .btn-logout {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            color: var(--danger);
+            border-color: var(--danger-border);
+            background-color: var(--danger-bg);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 0.85rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success-text);
+        }
+
+        .alert-error {
+            background-color: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            color: var(--danger-text);
+        }
+
+        /* Section Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fafbfc;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-control {
+            padding: 0.6rem 0.85rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .form-actions {
+            margin-top: 1.25rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.7rem;
+            font-size: 0.8rem;
+        }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            text-transform: capitalize;
+        }
+
+        .badge-active {
+            background-color: var(--badge-active-bg);
+            color: var(--badge-active-text);
+        }
+
+        .badge-cancelled {
+            background-color: var(--badge-cancelled-bg);
+            color: var(--badge-cancelled-text);
+        }
+
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        /* Modal for editing book */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        .btn-close:hover {
+            color: var(--text-main);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .badge-stock {
+            font-weight: 600;
+            color: #047857;
+        }
+
+        .badge-low-stock {
+            font-weight: 600;
+            color: #b45309;
+        }
+
+        .badge-out-of-stock {
+            font-weight: 600;
+            color: #b91c1c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Nav -->
+    <header class="admin-nav">
+        <div class="nav-brand">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                <path d="M6 6h10"/>
+                <path d="M6 10h10"/>
+            </svg>
+            <span>Library Admin Portal</span>
+            <span class="nav-brand-badge">Authorized</span>
+        </div>
+        <a href="{{ url_for('admin_logout') }}" class="btn-logout" title="Sign out of administration">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Log Out</span>
+        </a>
+    </header>
+
+    <main class="container">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}" role="alert">
+                        {% if category == 'success' %}
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        {% else %}
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add New Book Section -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Add New Book to Catalog</span>
+                </h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_add_book') }}" autocomplete="off">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="add_title">Book Title</label>
+                            <input type="text" id="add_title" name="title" class="form-control" placeholder="e.g. Clean Architecture" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="add_author">Author</label>
+                            <input type="text" id="add_author" name="author" class="form-control" placeholder="e.g. Robert C. Martin" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="add_category">Category</label>
+                            <input type="text" id="add_category" name="category" class="form-control" placeholder="e.g. Computer Science" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="add_isbn">ISBN</label>
+                            <input type="text" id="add_isbn" name="isbn" class="form-control" placeholder="e.g. LIB-0061" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="add_total">Total Copies</label>
+                            <input type="number" id="add_total" name="total_copies" class="form-control" value="1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="add_available">Available Copies</label>
+                            <input type="number" id="add_available" name="available_copies" class="form-control" value="1" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Add Book</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Catalog Books Table -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                        <path d="M6 6h10"/>
+                        <path d="M6 10h10"/>
+                    </svg>
+                    <span>Catalog Books ({{ books|length }})</span>
+                </h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>ISBN</th>
+                            <th>Total</th>
+                            <th>Available</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if books %}
+                            {% for b in books %}
+                                <tr>
+                                    <td><strong>#{{ b.id }}</strong></td>
+                                    <td>{{ b.title }}</td>
+                                    <td>{{ b.author }}</td>
+                                    <td>{{ b.category }}</td>
+                                    <td><code>{{ b.isbn }}</code></td>
+                                    <td>{{ b.total_copies }}</td>
+                                    <td>
+                                        {% if b.available_copies == 0 %}
+                                            <span class="badge-out-of-stock">0 copies</span>
+                                        {% elif b.available_copies == 1 %}
+                                            <span class="badge-low-stock">1 copy</span>
+                                        {% else %}
+                                            <span class="badge-stock">{{ b.available_copies }} copies</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="actions-cell">
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary btn-sm"
+                                                onclick="openEditModal({{ b.id }}, '{{ b.title|replace('\'', '\\\'') }}', '{{ b.author|replace('\'', '\\\'') }}', '{{ b.category|replace('\'', '\\\'') }}', '{{ b.isbn|replace('\'', '\\\'') }}', {{ b.total_copies }}, {{ b.available_copies }})"
+                                            >
+                                                Edit
+                                            </button>
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for('admin_delete_book', book_id=b.id) }}"
+                                                onsubmit="return confirm('Are you sure you want to delete \'{{ b.title|replace('\'', '\\\'') }}\'? Deletion will be rejected if there are active reservations.');"
+                                            >
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="empty-state">No books currently in the catalog.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- All Reservations Table -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>All Reservations ({{ reservations|length }})</span>
+                </h2>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Res #</th>
+                            <th>Member Name</th>
+                            <th>Email</th>
+                            <th>Book Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reservations %}
+                            {% for r in reservations %}
+                                <tr>
+                                    <td><strong>#{{ r.reservation_id }}</strong></td>
+                                    <td>{{ r.member_name }}</td>
+                                    <td><a href="mailto:{{ r.member_email }}" style="color: var(--primary); text-decoration: none;">{{ r.member_email }}</a></td>
+                                    <td>{{ r.book_title }}</td>
+                                    <td>
+                                        <span class="badge {{ 'badge-active' if r.status == 'active' else 'badge-cancelled' }}">
+                                            {{ r.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ r.date }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="empty-state">No reservations recorded yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Book Modal -->
+    <div class="modal-overlay" id="editModal" aria-modal="true" role="dialog">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Book Details</h3>
+                <button type="button" class="btn-close" onclick="closeEditModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" method="POST" action="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="edit_title">Book Title</label>
+                            <input type="text" id="edit_title" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_author">Author</label>
+                            <input type="text" id="edit_author" name="author" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_category">Category</label>
+                            <input type="text" id="edit_category" name="category" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_isbn">ISBN</label>
+                            <input type="text" id="edit_isbn" name="isbn" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_total">Total Copies</label>
+                            <input type="number" id="edit_total" name="total_copies" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_available">Available Copies</label>
+                            <input type="number" id="edit_available" name="available_copies" class="form-control" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="gap: 0.5rem;">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(id, title, author, category, isbn, total, available) {
+            const form = document.getElementById('editForm');
+            form.action = `/admin/books/${id}/edit`;
+            document.getElementById('edit_title').value = title;
+            document.getElementById('edit_author').value = author;
+            document.getElementById('edit_category').value = category;
+            document.getElementById('edit_isbn').value = isbn;
+            document.getElementById('edit_total').value = total;
+            document.getElementById('edit_available').value = available;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Close modal on Escape key
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('editModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeEditModal();
+            }
+        });
+    </script>
+</body>
+</html>

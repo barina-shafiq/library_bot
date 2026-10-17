@@ -1,0 +1,31 @@
+title,author,category,isbn,total_copies,available_copies
+Introduction to Algorithms,Thomas H. Cormen,Computer Science,LIB-0001,4,3
+Clean Code,Robert C. Martin,Computer Science,LIB-0002,3,2
+The Pragmatic Programmer,Andrew Hunt and David Thomas,Computer Science,LIB-0003,2,1
+Design Patterns,Erich Gamma et al.,Computer Science,LIB-0004,3,3
+Computer Networking: A Top-Down Approach,James F. Kurose,Computer Science,LIB-0005,4,2
+Operating System Concepts,Abraham Silberschatz,Computer Science,LIB-0006,5,4
+Database System Concepts,Abraham Silberschatz,Computer Science,LIB-0007,3,2
+Python Crash Course,Eric Matthes,Computer Science,LIB-0008,4,4
+Fluent Python,Luciano Ramalho,Computer Science,LIB-0009,2,1
+Hands-On Machine Learning with Scikit-Learn and TensorFlow,Aurelien Geron,Machine Learning,LIB-0010,5,3
+Deep Learning,Ian Goodfellow,Machine Learning,LIB-0011,2,0
+Pattern Recognition and Machine Learning,Christopher M. Bishop,Machine Learning,LIB-0012,2,1
+Artificial Intelligence: A Modern Approach,Stuart Russell and Peter Norvig,Machine Learning,LIB-0013,4,3
+Python Machine Learning,Sebastian Raschka,Machine Learning,LIB-0014,3,2
+The Hundred-Page Machine Learning Book,Andriy Burkov,Machine Learning,LIB-0015,3,3
+1984,George Orwell,Fiction,LIB-0016,4,0
+To Kill a Mockingbird,Harper Lee,Fiction,LIB-0017,3,2
+The Alchemist,Paulo Coelho,Fiction,LIB-0018,5,4
+Pride and Prejudice,Jane Austen,Fiction,LIB-0019,3,3
+The Kite Runner,Khaled Hosseini,Fiction,LIB-0020,2,1
+Sapiens: A Brief History of Humankind,Yuval Noah Harari,History,LIB-0021,3,0
+"Guns, Germs, and Steel",Jared Diamond,History,LIB-0022,2,2
+The Silk Roads,Peter Frankopan,History,LIB-0023,2,1
+A Brief History of Time,Stephen Hawking,Science,LIB-0024,3,2
+Cosmos,Carl Sagan,Science,LIB-0025,2,2
+The Selfish Gene,Richard Dawkins,Science,LIB-0026,2,1
+Zero to One,Peter Thiel,Business,LIB-0027,3,2
+The Lean Startup,Eric Ries,Business,LIB-0028,3,3
+Good to Great,Jim Collins,Business,LIB-0029,2,1
+"Thinking, Fast and Slow",Daniel Kahneman,Business,LIB-0030,3,2
