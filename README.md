@@ -1,3 +1,13 @@
+---
+title: Library Bot
+emoji: 📚
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 📚 Library-Bot
 
 An intelligent, full-stack library management assistant powered by Flask, SQLite, and Google Gemini API with automated function calling.
@@ -45,8 +55,10 @@ Library-Bot/
 ├── members.csv           # Initial member seed dataset
 ├── library.db            # SQLite database file (generated automatically)
 ├── requirements.txt      # Python dependencies
-├── Procfile              # Render process definition (gunicorn)
-├── render.yaml           # Render blueprint deployment specification
+├── Dockerfile            # Container configuration for Hugging Face Spaces
+├── .dockerignore         # Docker build ignore rules
+├── Procfile              # Process definition (gunicorn)
+├── render.yaml           # Blueprint deployment specification
 ├── LICENSE               # MIT License
 ├── static/
 │   ├── chat.js           # Client-side chat logic, session handling, and quick replies
@@ -136,17 +148,31 @@ python bot.py
 
 ---
 
-## ☁️ Deploy to Render
+## 🤗 Deploy to Hugging Face Spaces (100% Free, No Credit Card)
 
-1. Log in to **[Render](https://render.com/)** and link your GitHub account.
-2. Click **New +** -> **Blueprint** (or **Web Service**).
-3. Select your repository: `barina-shafiq/library_bot`.
-4. Render will automatically detect `render.yaml` (or use `buildCommand: pip install -r requirements.txt` and `startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120`).
-5. In the **Environment Variables** section on Render, add:
-   - `GEMINI_API_KEY`: *Your Google Gemini API Key*
-   - `ADMIN_PASSWORD`: *Your custom admin dashboard password*
-   - `SECRET_KEY`: *(Auto-generated or a 32-character random string)*
-6. Click **Deploy Web Service**. Your app will be live with a free `onrender.com` URL!
+Hugging Face Spaces provides a free 2 vCPU, 16 GB RAM environment with zero credit card required:
+
+1. **Create Account**: Sign up at **[huggingface.co](https://huggingface.co/)** (using GitHub or email).
+2. **New Space**: Go to **[huggingface.co/new-space](https://huggingface.co/new-space)**.
+   - **Space name**: `library-bot` (or your preferred name)
+   - **License**: `mit`
+   - **Select the Space SDK**: Choose **Docker** -> **Blank** (or connect your GitHub repo)
+   - **Space Hardware**: Free (2 vCPU, 16 GB RAM)
+   - Click **Create Space**.
+3. **Configure Secrets**:
+   - In your newly created Space, navigate to **Settings** -> **Variables and secrets**.
+   - Under **Secrets**, click **New secret** and add:
+     - Name: `GEMINI_API_KEY` | Value: *(Your Google Gemini API Key)*
+     - Name: `ADMIN_PASSWORD` | Value: *(Your chosen admin dashboard password)*
+     - Name: `SECRET_KEY` | Value: *(Any random 32-character string)*
+4. **Push / Sync Code**:
+   - In your terminal on your local machine, link your Hugging Face Space remote and push:
+     ```bash
+     git remote add hf https://huggingface.co/spaces/<YOUR_HF_USERNAME>/<SPACE_NAME>
+     git push hf main
+     ```
+   - *Alternatively*, under **Settings** -> **GitHub sync**, link your GitHub repo directly (`barina-shafiq/library_bot`).
+5. Hugging Face will automatically build the Docker image and launch the bot!
 
 ---
 
