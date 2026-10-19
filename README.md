@@ -45,6 +45,8 @@ Library-Bot/
 ├── members.csv           # Initial member seed dataset
 ├── library.db            # SQLite database file (generated automatically)
 ├── requirements.txt      # Python dependencies
+├── Procfile              # Render process definition (gunicorn)
+├── render.yaml           # Render blueprint deployment specification
 ├── LICENSE               # MIT License
 ├── static/
 │   ├── chat.js           # Client-side chat logic, session handling, and quick replies
@@ -131,6 +133,20 @@ You can also converse with the bot directly from your terminal:
 ```bash
 python bot.py
 ```
+
+---
+
+## ☁️ Deploy to Render
+
+1. Log in to **[Render](https://render.com/)** and link your GitHub account.
+2. Click **New +** -> **Blueprint** (or **Web Service**).
+3. Select your repository: `barina-shafiq/library_bot`.
+4. Render will automatically detect `render.yaml` (or use `buildCommand: pip install -r requirements.txt` and `startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120`).
+5. In the **Environment Variables** section on Render, add:
+   - `GEMINI_API_KEY`: *Your Google Gemini API Key*
+   - `ADMIN_PASSWORD`: *Your custom admin dashboard password*
+   - `SECRET_KEY`: *(Auto-generated or a 32-character random string)*
+6. Click **Deploy Web Service**. Your app will be live with a free `onrender.com` URL!
 
 ---
 
